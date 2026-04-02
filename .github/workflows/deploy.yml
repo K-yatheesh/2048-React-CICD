@@ -38,4 +38,4 @@ jobs:
         aws ecs update-service \
         --cluster react-cluster \
         --service react-service \
-        --force-new-deployment 
+        --force-new-deployment
