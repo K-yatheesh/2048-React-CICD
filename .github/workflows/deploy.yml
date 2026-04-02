@@ -21,8 +21,8 @@ jobs:
 
     - name: Login to ECR
       run: |
-        aws ecr get-login-password --region ${{ secrets.AWS_REGION }} \
-        | docker login --username AWS --password-stdin ${{ secrets.ECR_REPOSITORY }}
+    aws ecr get-login-password --region ap-south-1 | \
+    docker login --username AWS --password-stdin 421826136489.dkr.ecr.ap-south-1.amazonaws.com
 
     - name: Build Image
       run: docker build -t react-app .
