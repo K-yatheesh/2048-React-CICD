@@ -21,9 +21,11 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-    # 🔥 Build React app
+    # 🔥 Build React app (FIXED)
     - name: Build React app
       run: npm run build
+      env:
+        NODE_OPTIONS: --openssl-legacy-provider
 
     # 🔥 Verify build
     - name: Check build folder
@@ -43,15 +45,15 @@ jobs:
         aws ecr get-login-password --region ap-south-1 | \
         docker login --username AWS --password-stdin 421826136489.dkr.ecr.ap-south-1.amazonaws.com
 
-    # 🔥 Build Image (UPDATED)
+    # 🔥 Build Image
     - name: Build Image
       run: docker build -t react-app:${{ github.sha }} .
 
-    # 🔥 Tag Image (UPDATED)
+    # 🔥 Tag Image
     - name: Tag Image
       run: docker tag react-app:${{ github.sha }} 421826136489.dkr.ecr.ap-south-1.amazonaws.com/react-app:${{ github.sha }}
 
-    # 🔥 Push Image (UPDATED)
+    # 🔥 Push Image
     - name: Push Image
       run: docker push 421826136489.dkr.ecr.ap-south-1.amazonaws.com/react-app:${{ github.sha }}
 
