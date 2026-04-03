@@ -12,6 +12,25 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
+    # 🔥 Install Node (IMPORTANT)
+    - name: Setup Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+
+    # 🔥 Install dependencies
+    - name: Install dependencies
+      run: npm install
+
+    # 🔥 Build React app
+    - name: Build React app
+      run: npm run build
+
+    # 🔥 Verify build (VERY IMPORTANT)
+    - name: Check build folder
+      run: ls -la build
+
+    # AWS Login
     - name: AWS Login
       uses: aws-actions/configure-aws-credentials@v2
       with:
@@ -19,20 +38,25 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ap-south-1
 
+    # Login to ECR
     - name: Login to ECR
       run: |
         aws ecr get-login-password --region ap-south-1 | \
         docker login --username AWS --password-stdin 421826136489.dkr.ecr.ap-south-1.amazonaws.com
 
+    # Build Image
     - name: Build Image
       run: docker build -t react-app .
 
+    # Tag Image
     - name: Tag Image
       run: docker tag react-app:latest 421826136489.dkr.ecr.ap-south-1.amazonaws.com/react-app:latest
 
+    # Push Image
     - name: Push Image
       run: docker push 421826136489.dkr.ecr.ap-south-1.amazonaws.com/react-app:latest
 
+    # Deploy ECS
     - name: Deploy ECS
       run: |
         aws ecs update-service \
